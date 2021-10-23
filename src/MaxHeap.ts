@@ -7,7 +7,19 @@ export class MaxHeap<T> {
   }
 
   private less(i: number, j: number) {
-    return this.heap[i] < this.heap[j]
+    return this.heap[i]?.[this.priorityKey] < this.heap[j]?.[this.priorityKey]
+  }
+
+  private parent(i: number) {
+    return Math.floor((i + 1) / 2 - 1)
+  }
+
+  private left(i: number) {
+    return (i + 1) * 2 - 1
+  }
+
+  private right(i: number) {
+    return (i + 1) * 2
   }
 
   private swap(i: number, j: number) {
@@ -17,17 +29,17 @@ export class MaxHeap<T> {
   }
 
   private swim(k: number) {
-    while (k > 1 && this.less(k / 2, k)) {
-      this.swap(k / 2, k)
-      k = k / 2
+    while (k > 0 && this.less(this.parent(k), k)) {
+      this.swap(this.parent(k), k)
+      k = this.parent(k)
     }
   }
 
   private sink(k: number) {
     const N = this.heap.length
-    while (2 * k <= N) {
-      const j = 2 * k
-      if (j < N && this.less(j, j + 1)) j++
+    while (this.left(k) <= N) {
+      let j = this.left(k)
+      if (j < N && this.less(j, this.right(k))) j++
       if (!this.less(k, j)) break
       this.swap(k, j)
       k = j
@@ -36,12 +48,12 @@ export class MaxHeap<T> {
 
   push(item: T) {
     this.heap.push(item)
-    this.swim(this.heap.length)
+    this.swim(this.heap.length - 1)
   }
   pop() {
-    this.swap(1, this.heap.length--)
+    this.swap(0, this.heap.length--)
     const max = this.heap.pop()
-    this.sink(1)
+    this.sink(0)
     return max
   }
 }
