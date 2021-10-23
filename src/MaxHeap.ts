@@ -50,8 +50,9 @@ export class MaxHeap<T> {
     this.heap.push(item)
     this.swim(this.heap.length - 1)
   }
+
   pop() {
-    this.swap(0, this.heap.length--)
+    this.swap(0, this.heap.length - 1)
     const max = this.heap.pop()
     this.sink(0)
     return max
